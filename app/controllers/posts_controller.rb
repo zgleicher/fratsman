@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
+  helper_method :destroy_all
   def index
     @posts = Post.all.order('created_at DESC')
   end
@@ -9,6 +11,7 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
+    @post.user_id = current_user.id
     
     if @post.save
       redirect_to @post
@@ -41,11 +44,16 @@ class PostsController < ApplicationController
     redirect_to posts_path
   end
 
+  def destroy_all
+    Post.delete_all
+    redirect_to root_path
+  end
+
 
   private
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, :user_id)
   end
 
 end

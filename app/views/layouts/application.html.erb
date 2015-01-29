@@ -17,18 +17,22 @@
  
       <ul>
         <li class="category">Website</li>
-        <li><%= link_to "Blog", root_path %></li>
+        <li><%= link_to "Posts", root_path %></li>
         <li><%= link_to "About", about_path %></li>
       </ul>
  
       <ul>
        <li class="category">Social</li>
-       <li><a href="https://twitter.com/udayrsingh">Twitter</a></li>
-       <li><a href="https://github.com/udaysinghcode">Github</a></li>
-       <li><a href="mailto:usingh@romuluscap.com">Email</a></li>
+       <li><a href="http://deltasigcu.org/">Website</a></li>
+       <li><a href="http://www.dsp.columbiagroups.org">Columbia Group</a></li>
+       <li><a href="mailto:deltasig@columbia.edu">Email</a></li>
       </ul>
  
-      <p class="sign_in">Admin Login</p>
+      <% if user_signed_in? %>
+        <p class="sign_in"><%= link_to "Edit Profile", edit_user_registration_path %></p>
+      <% else %>
+        <p class="sign_in"><%= link_to "Admin Login", new_user_session_path %></p>
+      <% end %>
     </div>
 
     <div id="main_content">
@@ -40,13 +44,15 @@
         <% else %>
           <%= link_to "Back to All Posts", root_path %>
         <% end %>
-   
-        <div class="buttons">
-          <button class="button"><%= link_to "New Post", new_post_path %></button>
-          <button class="button">Log Out</button>
-        </div>
+
+        <% if user_signed_in? %> 
+          <div class="buttons"> 
+            <button class="button"><%= link_to "New Post", new_post_path %></button> 
+            <button class="button"><%= link_to "Log Out", destroy_user_session_path, method: :delete %></button> 
+          </div> 
+        <% end %> 
       </div>
-   
+      <br>
       <% flash.each do |name, msg| %>
         <%= content_tag(:div, msg, class: "alert") %>
       <% end %>

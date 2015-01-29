@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   resources :posts do
     resources :comments
   end
 
-  root "posts#index"
+  root to: "posts#index"
 
   get 'about', to: 'pages'
   # The priority is based upon order of creation: first created -> highest priority.
