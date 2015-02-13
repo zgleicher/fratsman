@@ -1,3 +1,4 @@
+require 'sendgrid-ruby'
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   helper_method :destroy_all
@@ -12,7 +13,6 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     @post.user_id = current_user.id
-    
     if @post.save
       redirect_to @post
     else
@@ -54,6 +54,20 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :body, :user_id)
+  end
+
+  def send_email(to, from, subject, text)
+    client = SendGrid::Client.new do |c|
+        c.api_user = 'zgleicher'
+        c.api_key = 'dsig123'
+    end
+    mail = SendGrid::Mail.new do |m|
+      m.to = to
+      m.from = from
+      m.subject = subject
+      m.text = text
+    end
+    puts client.send(mail) 
   end
 
 end
